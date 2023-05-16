@@ -14,7 +14,7 @@ from dataclasses import dataclass, field
 from typing import Optional, Tuple #Needs python 3.8 for literal
 
 HOME = os.getcwd()
-INITS = ['lorenz', 'cylinder', 'grayscott']
+INITS = ['lorenz', 'cylinder', 'grayscott', 'era5']
 logger = logging.getLogger(__name__)
 
 @dataclass
@@ -108,7 +108,7 @@ class TrainingArguments:
         default=0, metadata={"help": "Epoch to start training at"}
     )
     epochs: int = field(
-        default=200, metadata={"help": "Number of epochs to train"}
+        default=500, metadata={"help": "Number of epochs to train"}
     )
 
     # ===== Optimization parameters =====

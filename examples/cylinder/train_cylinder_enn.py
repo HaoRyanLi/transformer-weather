@@ -1,16 +1,8 @@
-"""
-=====
-Training embedding model for the flow around cylinder numerical example.
-This is a built-in model from the paper.
+import tensorflow as tf
+tf.config.list_physical_devices('GPU')
 
-Distributed by: Notre Dame SCAI Lab (MIT Liscense)
-- Associated publication:
-url: https://arxiv.org/abs/2010.03957
-doi: 
-github: https://github.com/zabaras/transformer-physx
-=====
-"""
 import sys
+sys.path.insert(0, "/work/09012/haoli1/ls6/transformer-physx")
 import logging
 import torch
 from torch.optim.lr_scheduler import ExponentialLR
@@ -20,13 +12,23 @@ from trphysx.embedding.embedding_auto import AutoEmbeddingModel
 from trphysx.viz.viz_auto import AutoViz
 from trphysx.embedding.training import *
 
+import gdown
+import os
+
+
+
 logger = logging.getLogger(__name__)
 
 if __name__ == '__main__':
+    if not os.path.exists("/work/09012/haoli1/ls6/transformer-physx/examples/cylinder/data/cylinder_training.hdf5"):
+        gdown.download("https://drive.google.com/uc?id=1i6ObgR4GsSMRBJ16rdMvexgU2egKYT3v", "./data/cylinder_training.hdf5", quiet=False)
+    if not os.path.exists("/work/09012/haoli1/ls6/transformer-physx/examples/cylinder/data/cylinder_valid.hdf5"):
+        gdown.download("https://drive.google.com/uc?id=10I_uqaKgq82IxTKiRnaJ39Ajpe4e8Rws", "./data/cylinder_valid.hdf5", quiet=False)
+
 
     sys.argv = sys.argv + ["--exp_name", "cylinder"]
-    sys.argv = sys.argv + ["--training_h5_file", "/data/cylinder_training.hdf5"]
-    sys.argv = sys.argv + ["--eval_h5_file", "/data/cylinder_valid.hdf5"]
+    sys.argv = sys.argv + ["--training_h5_file", "/work/09012/haoli1/ls6/transformer-physx/examples/cylinder/data/cylinder_training.hdf5"]
+    sys.argv = sys.argv + ["--eval_h5_file", "/work/09012/haoli1/ls6/transformer-physx/examples/cylinder/data/cylinder_valid.hdf5"]
     sys.argv = sys.argv + ["--batch_size", "64"]
     sys.argv = sys.argv + ["--block_size", "4"]
     sys.argv = sys.argv + ["--n_train", "27"]
@@ -43,6 +45,7 @@ if __name__ == '__main__':
         use_cuda = "cuda"
     args.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     logger.info("Torch device: {}".format(args.device))
+    logger.info("Epoch: {}".format(args.epochs))
 
     # Load transformer config file
     config = AutoPhysConfig.load_config(args.exp_name)
@@ -75,3 +78,4 @@ if __name__ == '__main__':
 
     trainer = EmbeddingTrainer(model, args, (optimizer, scheduler), viz)
     trainer.train(training_loader, testing_loader)
+    model.embedding_model.save_model('/work/09012/haoli1/ls6/transformer-physx/examples/cylinder', epoch=args.epochs)

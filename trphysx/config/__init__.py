@@ -6,4 +6,5 @@ from .configuration_auto import AutoPhysConfig
 from .configuration_cylinder import CylinderConfig
 from .configuration_grayscott import GrayScottConfig
 from .configuration_lorenz import LorenzConfig
+from .configuration_era5 import ERA5Config
 from .configuration_phys import PhysConfig

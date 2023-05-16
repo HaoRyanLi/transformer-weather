@@ -35,7 +35,7 @@ class EmbeddingParser(argparse.ArgumentParser):
 
         # training
         self.add_argument('--epoch_start', type=int, default=0, help='epoch to start at, will load pre-trained network')
-        self.add_argument('--epochs', type=int, default=300, help='number of epochs to train')
+        self.add_argument('--epochs', type=int, default=500, help='number of epochs to train')
         self.add_argument('--lr', type=float, default=0.001, help='ADAM learning rate')
         self.add_argument('--seed', type=int, default=12345, help='manual seed used in PyTorch and Numpy')
         self.add_argument('--n_gpu', type=int, default=1, help='Max number of GPUs to use')

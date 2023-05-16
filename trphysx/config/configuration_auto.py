@@ -15,13 +15,15 @@ from typing import Dict
 from .configuration_lorenz import LorenzConfig
 from .configuration_cylinder import CylinderConfig
 from .configuration_grayscott import GrayScottConfig
+from .configuration_era5 import ERA5Config
 from .configuration_phys import PhysConfig
 
 CONFIG_MAPPING = OrderedDict(
     [
         ("lorenz", LorenzConfig),
         ("cylinder", CylinderConfig),
-        ("grayscott", GrayScottConfig)
+        ("grayscott", GrayScottConfig),
+        ("era5", ERA5Config)
     ]
 )
 CONFIG_NAME = "config_trphysx.json"
@@ -54,11 +56,14 @@ class AutoPhysConfig:
         if os.path.isdir(model_name_or_path):
             config_file = os.path.join(model_name_or_path, CONFIG_NAME)
             config_dict = cls.from_json_file(config_file)
+            print("1")
         elif os.path.isfile(model_name_or_path):
             config_file = model_name_or_path
             config_dict = cls.from_json_file(config_file)
+            print("2")
         else:
             config_dict = {}
+            print("3")
 
         # First check if the model name is a pre-defined config
         if(model_name_or_path in CONFIG_MAPPING.keys()):

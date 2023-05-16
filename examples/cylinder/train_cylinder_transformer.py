@@ -1,16 +1,10 @@
-"""
-=====
-Training transformer model for the flow around a cylinder numerical example.
-This is a built-in model from the paper.
+import tensorflow as tf
+tf.config.list_physical_devices('GPU')
 
-Distributed by: Notre Dame SCAI Lab (MIT Liscense)
-- Associated publication:
-url: https://arxiv.org/abs/2010.03957
-doi: 
-github: https://github.com/zabaras/transformer-physx
-=====
-"""
+
 import sys
+sys.path.insert(0, "/work/09012/haoli1/ls6/transformer-physx")
+
 import logging
 import torch
 from trphysx.config import HfArgumentParser
@@ -21,13 +15,20 @@ from trphysx.embedding import AutoEmbeddingModel
 from trphysx.viz import AutoViz
 from trphysx.data_utils import AutoDataset
 from trphysx.utils.trainer import Trainer
+import gdown
+import os
 
 logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
+    if not os.path.exists("/work/09012/haoli1/ls6/transformer-physx/examples/cylinder/data/cylinder_training.hdf5"):
+        gdown.download("https://drive.google.com/uc?id=1i6ObgR4GsSMRBJ16rdMvexgU2egKYT3v", "./data/cylinder_training.hdf5", quiet=False)
+    if not os.path.exists("/work/09012/haoli1/ls6/transformer-physx/examples/cylinder/data/cylinder_valid.hdf5"):
+        gdown.download("https://drive.google.com/uc?id=10I_uqaKgq82IxTKiRnaJ39Ajpe4e8Rws", "./data/cylinder_valid.hdf5", quiet=False)
+
 
     sys.argv = sys.argv + ["--init_name", "cylinder"]
-    sys.argv = sys.argv + ["--embedding_file_or_path", "./embedding_cylinder300.pth"]
+    sys.argv = sys.argv + ["--embedding_file_or_path", "/work/09012/haoli1/ls6/transformer-physx/examples/cylinder/embedding_cylinder500.pth"]
     sys.argv = sys.argv + ["--training_h5_file","./data/cylinder_training.hdf5"]
     sys.argv = sys.argv + ["--eval_h5_file","./data/cylinder_valid.hdf5"]
     sys.argv = sys.argv + ["--train_batch_size", "4"]
