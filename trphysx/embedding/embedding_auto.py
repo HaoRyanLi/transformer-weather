@@ -14,13 +14,16 @@ from .embedding_model import EmbeddingModel, EmbeddingTrainingHead
 from .embedding_lorenz import LorenzEmbedding, LorenzEmbeddingTrainer
 from .embedding_cylinder import CylinderEmbedding, CylinderEmbeddingTrainer
 from .embedding_grayscott import GrayScottEmbedding, GrayScottEmbeddingTrainer
+from .embedding_era5 import ERA5Embedding, ERA5EmbeddingTrainer
+
 from trphysx.config.configuration_phys import PhysConfig
 
 MODEL_MAPPING = OrderedDict(
     [
         ("lorenz", LorenzEmbedding),
         ("cylinder", CylinderEmbedding),
-        ("grayscott", GrayScottEmbedding)
+        ("grayscott", GrayScottEmbedding),
+        ("era5", ERA5Embedding)
     ]
 )
 
@@ -28,7 +31,8 @@ TRAINING_MAPPING = OrderedDict(
     [
         ("lorenz", LorenzEmbeddingTrainer),
         ("cylinder", CylinderEmbeddingTrainer),
-        ("grayscott", GrayScottEmbeddingTrainer)
+        ("grayscott", GrayScottEmbeddingTrainer),
+        ("era5", ERA5EmbeddingTrainer)
     ]
 )
 

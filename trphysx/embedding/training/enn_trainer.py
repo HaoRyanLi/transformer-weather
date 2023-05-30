@@ -109,12 +109,12 @@ class EmbeddingTrainer:
             for param_group in optimizer.param_groups:
                 cur_lr = param_group['lr']
                 break
-            logger.info("Epoch {:d}: Training loss {:.03f}, Lr {:.05f}".format(epoch, loss_total, cur_lr))
+            logger.info("Epoch {:d}: Training loss {:.06f}, Lr {:.05f}".format(epoch, loss_total, cur_lr))
 
             # Evaluate current model
             if(epoch%5 == 0 or epoch == 1):
                 output = self.evaluate(eval_dataloader, epoch=epoch)
-                logger.info('Epoch {:d}: Test loss: {:.02f}'.format(epoch, output['test_error']))
+                logger.info('Epoch: {:d} Test loss: {:.06f} Plain error: {:.06f}'.format(epoch, output['test_error'], output['plain_error']))
 
             # Save model checkpoint
             if epoch % self.args.save_steps == 0:
@@ -137,12 +137,13 @@ class EmbeddingTrainer:
             Dict[str, float]: Dictionary of prediction metrics
         """
         test_loss = 0
+        plain_error = 0
         for mbidx, inputs in enumerate(eval_dataloader):
-            
-            loss, state_pred, state_target = self.model.evaluate(**inputs)
+            loss, perror, state_pred, state_target = self.model.evaluate(**inputs)
             test_loss = test_loss + loss
+            plain_error = plain_error + perror
 
             if not self.viz is None and mbidx == 0:
                 self.viz.plotEmbeddingPrediction(state_pred, state_target, epoch=epoch)
 
-            return {'test_error': test_loss/len(eval_dataloader)}
+            return {'test_error': test_loss/len(eval_dataloader), 'plain_error': plain_error/len(eval_dataloader),}

@@ -10,17 +10,17 @@ from .configuration_phys import PhysConfig
 logger = logging.getLogger(__name__)
 
 class ERA5Config(PhysConfig):
-    """ This is the configuration class for the modeling of the flow around a era5 system.
+    """ This is the configuration class for the modeling of the era5 data.
     """
 
     model_type = "era5"
 
     def __init__(
         self,
-        n_ctx=16,
-        n_embd=128,
+        n_ctx=128,
+        n_embd=1600,
         n_layer=6,
-        n_head=32, # n_head must be a factor of n_embd
+        n_head=40, # n_head must be a factor of n_embd
         state_dims=[2, 32, 32, 32],
         activation_function="gelu_new",
         **kwargs

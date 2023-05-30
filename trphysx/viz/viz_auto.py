@@ -11,6 +11,7 @@ from collections import OrderedDict
 from .viz_lorenz import LorenzViz
 from .viz_cylinder import CylinderViz
 from .viz_grayscott import GrayScottViz
+from .viz_era5 import ERA5
 from .viz_model import Viz
 
 VIZ_MAPPING = OrderedDict(
@@ -18,6 +19,7 @@ VIZ_MAPPING = OrderedDict(
         ("lorenz", LorenzViz),
         ("cylinder", CylinderViz),
         ("grayscott", GrayScottViz),
+        ("era5", ERA5),
     ]
 )
 

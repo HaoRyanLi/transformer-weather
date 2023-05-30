@@ -11,26 +11,29 @@ from trphysx.config.configuration_auto import AutoPhysConfig
 from trphysx.embedding.embedding_auto import AutoEmbeddingModel
 from trphysx.viz.viz_auto import AutoViz
 from trphysx.embedding.training import *
-
+import argparse
 import gdown
 import os
-
 
 
 logger = logging.getLogger(__name__)
 
 if __name__ == '__main__':
-    if not os.path.exists("/work/09012/haoli1/ls6/transformer-weather/examples/cylinder/data/cylinder_training.hdf5"):
-        gdown.download("https://drive.google.com/uc?id=1i6ObgR4GsSMRBJ16rdMvexgU2egKYT3v", "./data/cylinder_training.hdf5", quiet=False)
-    if not os.path.exists("/work/09012/haoli1/ls6/transformer-weather/examples/cylinder/data/cylinder_valid.hdf5"):
-        gdown.download("https://drive.google.com/uc?id=10I_uqaKgq82IxTKiRnaJ39Ajpe4e8Rws", "./data/cylinder_valid.hdf5", quiet=False)
+    directory = '/scratch/09012/haoli1/ERA5/dataset/'
+    train_data_list = []
+    for filename in os.listdir(directory):
+        f = os.path.join(directory, filename)
+        # checking if it is a file
+        train_data_list.append(f)
+    train_data_files = ','.join(train_data_list)
+    valid_data_files = '/scratch/09012/haoli1/ERA5/val_dataset/era5_train_09012020_3_24hr.npz'
 
-
-    sys.argv = sys.argv + ["--exp_name", "ERA5"]
-    sys.argv = sys.argv + ["--training_h5_file", "/work/09012/haoli1/ls6/transformer-weather/examples/cylinder/data/cylinder_training.hdf5"]
-    sys.argv = sys.argv + ["--eval_h5_file", "/work/09012/haoli1/ls6/transformer-weather/examples/cylinder/data/cylinder_valid.hdf5"]
+    sys.argv = sys.argv + ["--exp_name", "era5"]
+    sys.argv = sys.argv + ["--training_h5_file", train_data_files]
+    sys.argv = sys.argv + ["--eval_h5_file", valid_data_files]
     sys.argv = sys.argv + ["--batch_size", "64"]
-    sys.argv = sys.argv + ["--block_size", "4"]
+    sys.argv = sys.argv + ["--block_size", "24"]
+    sys.argv = sys.argv + ["--stride", "24"]
     sys.argv = sys.argv + ["--n_train", "27"]
     sys.argv = sys.argv + ["--n_eval", "6"]
     sys.argv = sys.argv + ["--epochs", "10"]
@@ -41,16 +44,17 @@ if __name__ == '__main__':
         format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
         datefmt="%m/%d/%Y %H:%M:%S",
         level=logging.INFO)
+    args = EmbeddingParser().parse()
 
-    args = EmbeddingParser().parse()       
     if(torch.cuda.is_available()):
         use_cuda = "cuda"
     args.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     logger.info("Torch device: {}".format(args.device))
     logger.info("epochs: {}".format(args.epochs))
-
+    
     # Load transformer config file
     config = AutoPhysConfig.load_config(args.exp_name)
+
     data_handler = AutoDataHandler.load_data_handler(args.exp_name)
     viz = AutoViz.load_viz(args.exp_name, plot_dir=args.plot_dir)
 

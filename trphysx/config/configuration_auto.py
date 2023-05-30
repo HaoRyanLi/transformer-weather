@@ -44,7 +44,7 @@ class AutoPhysConfig:
     @classmethod
     def load_config(cls, model_name_or_path, **kwargs) -> PhysConfig:
         """Creates a configuration object for a transformer model.
-        Predefined configs currently support: "lorenz", "cylinder", "grayscott"
+        Predefined configs currently support: "lorenz", "cylinder", "grayscott", "era5"
 
         Args:
             model_name_or_path (str): Name of model or path to save config JSON file
@@ -66,6 +66,7 @@ class AutoPhysConfig:
             print("3")
 
         # First check if the model name is a pre-defined config
+        print(f"CONFIG_MAPPING.keys(): {CONFIG_MAPPING.keys()}")
         if(model_name_or_path in CONFIG_MAPPING.keys()):
             config_class = CONFIG_MAPPING[model_name_or_path]
             # Init config class
@@ -73,7 +74,6 @@ class AutoPhysConfig:
             config.update(config_dict)
         else:
             config = PhysConfig.from_dict(config_dict, **kwargs)
-
         return config
 
     @classmethod

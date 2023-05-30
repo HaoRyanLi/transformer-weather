@@ -43,16 +43,16 @@ class GrayScottEmbedding(EmbeddingModel):
             nn.Conv3d(2, 64, kernel_size=(5, 5, 5), stride=2, padding=2, padding_mode='circular'),
             nn.BatchNorm3d(64),
             nn.LeakyReLU(0.02, inplace=True),
-            # 8, 32, 32, 32
+            # 64, 32, 32, 32
             nn.Conv3d(64, 128, kernel_size=(3, 3, 3), stride=2, padding=1, padding_mode='circular'),
             nn.BatchNorm3d(128),
             nn.LeakyReLU(0.02, inplace=True),
-            # 16, 16, 16, 16
+            # 128, 16, 16, 16
             nn.Conv3d(128, 128, kernel_size=(3, 3, 3), stride=2, padding=1, padding_mode='circular'),
             nn.BatchNorm3d(128),
             nn.LeakyReLU(0.02, inplace=True),
             # 
-            # 32, 8, 8, 8
+            # 128, 8, 8, 8
             nn.Conv3d(128, 64, kernel_size=(1, 1, 1), stride=1, padding=0, padding_mode='circular'),
             nn.BatchNorm3d(64),
             nn.LeakyReLU(0.02, inplace=True),
@@ -88,7 +88,7 @@ class GrayScottEmbedding(EmbeddingModel):
             nn.Conv3d(128, 64, kernel_size=(3, 3, 3), stride=1, padding=1, padding_mode='circular'),
             nn.BatchNorm3d(64),
             nn.LeakyReLU(0.02, inplace=True),
-            # 8, 32, 32, 32
+            # 64, 32, 32, 32
             nn.Upsample(scale_factor=2, mode='trilinear', align_corners=False),
             nn.Conv3d(64, 64, kernel_size=(3, 3, 3), stride=1, padding=1, padding_mode='circular'),
             nn.BatchNorm3d(64),

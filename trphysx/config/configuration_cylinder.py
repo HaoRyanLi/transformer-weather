@@ -20,8 +20,8 @@ class CylinderConfig(PhysConfig):
 
     def __init__(
         self,
-        n_ctx=16,
-        n_embd=128,
+        n_ctx=128,
+        n_embd=512,
         n_layer=6,
         n_head=4,
         state_dims=[3,64,128],

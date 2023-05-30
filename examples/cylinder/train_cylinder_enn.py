@@ -2,7 +2,7 @@ import tensorflow as tf
 tf.config.list_physical_devices('GPU')
 
 import sys
-sys.path.insert(0, "/work/09012/haoli1/ls6/transformer-physx")
+sys.path.insert(0, "/work/09012/haoli1/ls6/transformer-weather")
 import logging
 import torch
 from torch.optim.lr_scheduler import ExponentialLR
@@ -20,19 +20,21 @@ import os
 logger = logging.getLogger(__name__)
 
 if __name__ == '__main__':
-    if not os.path.exists("/work/09012/haoli1/ls6/transformer-physx/examples/cylinder/data/cylinder_training.hdf5"):
+    if not os.path.exists("/work/09012/haoli1/ls6/transformer-weather/examples/cylinder/data/cylinder_training.hdf5"):
         gdown.download("https://drive.google.com/uc?id=1i6ObgR4GsSMRBJ16rdMvexgU2egKYT3v", "./data/cylinder_training.hdf5", quiet=False)
-    if not os.path.exists("/work/09012/haoli1/ls6/transformer-physx/examples/cylinder/data/cylinder_valid.hdf5"):
+    if not os.path.exists("/work/09012/haoli1/ls6/transformer-weather/examples/cylinder/data/cylinder_valid.hdf5"):
         gdown.download("https://drive.google.com/uc?id=10I_uqaKgq82IxTKiRnaJ39Ajpe4e8Rws", "./data/cylinder_valid.hdf5", quiet=False)
 
 
     sys.argv = sys.argv + ["--exp_name", "cylinder"]
-    sys.argv = sys.argv + ["--training_h5_file", "/work/09012/haoli1/ls6/transformer-physx/examples/cylinder/data/cylinder_training.hdf5"]
-    sys.argv = sys.argv + ["--eval_h5_file", "/work/09012/haoli1/ls6/transformer-physx/examples/cylinder/data/cylinder_valid.hdf5"]
+    sys.argv = sys.argv + ["--training_h5_file", "/work/09012/haoli1/ls6/transformer-weather/examples/cylinder/data/cylinder_training.hdf5"]
+    sys.argv = sys.argv + ["--eval_h5_file", "/work/09012/haoli1/ls6/transformer-weather/examples/cylinder/data/cylinder_valid.hdf5"]
     sys.argv = sys.argv + ["--batch_size", "64"]
     sys.argv = sys.argv + ["--block_size", "4"]
     sys.argv = sys.argv + ["--n_train", "27"]
     sys.argv = sys.argv + ["--n_eval", "6"]
+    sys.argv = sys.argv + ["--epochs", "500"]
+    sys.argv = sys.argv + ["--n_gpu", "3"]
 
     # Setup logging
     logging.basicConfig(
@@ -78,4 +80,4 @@ if __name__ == '__main__':
 
     trainer = EmbeddingTrainer(model, args, (optimizer, scheduler), viz)
     trainer.train(training_loader, testing_loader)
-    model.embedding_model.save_model('/work/09012/haoli1/ls6/transformer-physx/examples/cylinder', epoch=args.epochs)
+    model.embedding_model.save_model('/work/09012/haoli1/ls6/transformer-weather/examples/cylinder', epoch=args.epochs)
